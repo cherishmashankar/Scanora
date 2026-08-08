@@ -1,0 +1,26 @@
+<resources>
+
+    <string name="app_name">Scanora</string>
+
+    <string name="camera_permission_required">Camera permission is required</string>
+
+    <string name="toggle_flash">Toggle flash</string>
+
+    <string name="scan_again">Scan Again</string>
+
+    <string name="scan_type_qr">QR Code</string>
+
+    <string name="scan_type_barcode">Barcode</string>
+
+    <string name="point_camera_at_code">Point the camera at a QR code or barcode</string>
+
+    <string name="scanner_initializing">Starting camera…</string>
+    <string name="scanner_ready">Point at a QR code or barcode</string>
+    <string name="scanner_detecting">Hold steady…</string>
+    <string name="scanner_success">Scan successful</string>
+    <string name="scanner_error">Unable to scan</string>
+
+    <string name="scan_result_loading">Loading scan...</string>
+    <string name="scan_result_not_found">Scan not found</string>
+
+</resources>

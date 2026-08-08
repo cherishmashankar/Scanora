@@ -24,4 +24,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "Scanora"
 include(":app")
- 
+include(":core:common")
+include(":core:designsystem")
+include(":core:model")
+include(":feature:scanner")
+
+include(":core:database")
+include(":core:data")
