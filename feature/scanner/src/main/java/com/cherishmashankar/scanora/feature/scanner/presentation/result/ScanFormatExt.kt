@@ -1,4 +1,4 @@
-package com.cherishmashankar.scanora.feature.scanner.presentation
+package com.cherishmashankar.scanora.feature.scanner.presentation.result
 
 import androidx.annotation.StringRes
 import com.cherishmashankar.scanora.core.model.ScanFormat

@@ -1,4 +1,4 @@
-package com.cherishmashankar.scanora.feature.scanner.presentation.components
+package com.cherishmashankar.scanora.feature.scanner.presentation.scanner.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.feature.scanner.R
 import com.cherishmashankar.scanora.feature.scanner.camera.CameraPreview
-import com.cherishmashankar.scanora.feature.scanner.presentation.ScannerStatus
-import com.cherishmashankar.scanora.feature.scanner.presentation.toStringRes
+import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.ScannerStatus
+import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.toStringRes
 
 @Composable
 internal fun CameraContent(

@@ -1,16 +1,17 @@
-package com.cherishmashankar.scanora.feature.scanner.presentation
+package com.cherishmashankar.scanora.feature.scanner.presentation.scanner
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cherishmashankar.scanora.core.data.repository.ScanRepository
 import com.cherishmashankar.scanora.core.model.Scan
+import com.cherishmashankar.scanora.feature.scanner.presentation.ScannerEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 internal class ScannerViewModel @Inject constructor(
@@ -55,12 +56,21 @@ internal class ScannerViewModel @Inject constructor(
                     )
                 }
             }
+            ScannerEvent.SaveErrorConsumed -> {
+                _uiState.update {
+                    it.copy(
+                        saveError = null
+                    )
+                }
+            }
 
             is ScannerEvent.CameraPermissionChanged -> {
                 _uiState.update {
                     it.copy(
-                        hasCameraPermission = event.granted,
-                        scannerStatus = if (event.granted) {
+                        cameraPermissionState = event.state,
+                        scannerStatus = if (
+                            event.state == CameraPermissionState.GRANTED
+                        ) {
                             ScannerStatus.READY
                         } else {
                             ScannerStatus.ERROR
@@ -106,8 +116,12 @@ internal class ScannerViewModel @Inject constructor(
                 }
 
             }.onFailure {
-                // We'll add explicit error UI later.
-                // Current result remains on screen.
+                _uiState.update {
+                    it.copy(
+                        isSaving = false,
+                        saveError = ScannerError.SaveFailed
+                    )
+                }
             }
         }
     }

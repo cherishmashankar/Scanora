@@ -1,4 +1,4 @@
-package com.cherishmashankar.scanora.feature.scanner.presentation.components
+package com.cherishmashankar.scanora.feature.scanner.presentation.scanner.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.feature.scanner.R
+import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.toStringRes
 import com.cherishmashankar.scanora.feature.scanner.presentation.toStringRes
 
 @Composable

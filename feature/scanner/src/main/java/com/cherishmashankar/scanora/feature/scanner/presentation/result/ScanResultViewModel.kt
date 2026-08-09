@@ -22,6 +22,18 @@ internal class ScanResultViewModel @Inject constructor(
     private val scanId: Long? =
         savedStateHandle["scanId"]
 
+    private val _isDeleting =
+        MutableStateFlow(false)
+
+    val isDeleting: StateFlow<Boolean> =
+        _isDeleting
+
+    private val _deleteError =
+        MutableStateFlow(false)
+
+    val deleteError: StateFlow<Boolean> =
+        _deleteError
+
     val uiState: StateFlow<ScanResultUiState> =
         if (scanId == null) {
             MutableStateFlow(
@@ -48,12 +60,25 @@ internal class ScanResultViewModel @Inject constructor(
     ) {
         val id = scanId ?: return
 
+        if (_isDeleting.value) return
+
+        _isDeleting.value = true
+        _deleteError.value = false
+
         viewModelScope.launch {
             runCatching {
                 scanRepository.deleteScan(id)
             }.onSuccess {
+                _isDeleting.value = false
                 onDeleted()
+            }.onFailure {
+                _isDeleting.value = false
+                _deleteError.value = true
             }
         }
+    }
+
+    fun consumeDeleteError() {
+        _deleteError.value = false
     }
 }

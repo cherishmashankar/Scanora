@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cherishmashankar.scanora.core.model.ScanFormat
-import com.cherishmashankar.scanora.feature.scanner.presentation.toStringRes
+import com.cherishmashankar.scanora.feature.scanner.presentation.result.toStringRes
 
 @Composable
 internal fun ScanFormatBadge(
@@ -24,10 +24,7 @@ internal fun ScanFormatBadge(
             text = stringResource(format.toStringRes()),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = Modifier.padding(
-                horizontal = 10.dp,
-                vertical = 5.dp
-            )
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
         )
     }
 }

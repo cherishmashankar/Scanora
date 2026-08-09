@@ -2,39 +2,49 @@
 
     <string name="app_name">Scanora</string>
 
-    <string name="camera_permission_required">Camera permission is required</string>
-
     <string name="toggle_flash">Toggle flash</string>
 
-    <string name="scan_again">Scan Again</string>
+    <string name="scan_again">Scan again</string>
 
     <string name="scan_type_qr">QR Code</string>
-
     <string name="scan_type_barcode">Barcode</string>
 
-    <string name="point_camera_at_code">Point the camera at a QR code or barcode</string>
+    <string name="point_camera_at_code">Point at a code</string>
 
     <string name="scanner_initializing">Starting camera…</string>
-    <string name="scanner_ready">Point at a QR code or barcode</string>
+    <string name="scanner_ready">Ready to scan</string>
     <string name="scanner_detecting">Hold steady…</string>
-    <string name="scanner_success">Scan successful</string>
-    <string name="scanner_error">Unable to scan</string>
+    <string name="scanner_success">Scanned</string>
+    <string name="scanner_error">Scan failed</string>
 
-    <string name="scan_result_loading">Loading scan...</string>
+    <string name="scan_result_loading">Loading…</string>
     <string name="scan_result_not_found">Scan not found</string>
 
     <string name="scan_result_title">Scan result</string>
     <string name="scan_result_content">Content</string>
+
     <string name="save">Save</string>
     <string name="saved">Saved</string>
     <string name="share">Share</string>
     <string name="browse">Browse</string>
-
-    <string name="history_title">History</string>
-    <string name="history_empty">No saved scans yet</string>
-
+    <string name="delete">Delete</string>
     <string name="back">Back</string>
     <string name="open_in_browser">Open in browser</string>
-    <string name="delete">Delete</string>
+
+    <string name="history_title">History</string>
+    <string name="history_empty">No saved scans</string>
+
+    <string name="scan_save_failed">Couldn’t save scan</string>
+    <string name="scan_delete_failed">Couldn’t delete scan</string>
+    <string name="scan_open_failed">Couldn’t open link</string>
+    <string name="scan_share_failed">Couldn’t share scan</string>
+
+    <string name="camera_permission_required">Camera access is needed to scan codes.</string>
+    <string name="grant_permission">Allow camera</string>
+    <string name="open_settings">Open settings</string>
+
+    <string name="delete_scan_title">Delete scan?</string>
+    <string name="delete_scan_message">This scan will be removed from history.</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

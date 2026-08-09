@@ -1,42 +1,48 @@
 <resources>
-
     <string name="app_name">Scanora</string>
 
-    <string name="camera_permission_required">Kameraberechtigung ist erforderlich</string>
-
-    <string name="toggle_flash">Taschenlampe umschalten</string>
+    <string name="toggle_flash">Blitz umschalten</string>
 
     <string name="scan_again">Erneut scannen</string>
 
     <string name="scan_type_qr">QR-Code</string>
-
     <string name="scan_type_barcode">Barcode</string>
 
-    <string name="point_camera_at_code">Richte die Kamera auf einen QR-Code oder Barcode</string>
+    <string name="point_camera_at_code">Auf einen Code richten</string>
 
-    <string name="scanner_initializing">Kamera wird gestartet…</string>
-    <string name="scanner_ready">Auf einen QR-Code oder Barcode richten</string>
+    <string name="scanner_initializing">Kamera startet…</string>
+    <string name="scanner_ready">Bereit zum Scannen</string>
     <string name="scanner_detecting">Stillhalten…</string>
-    <string name="scanner_success">Scan erfolgreich</string>
-    <string name="scanner_error">Scannen nicht möglich</string>
+    <string name="scanner_success">Gescannt</string>
+    <string name="scanner_error">Scan fehlgeschlagen</string>
 
-    <string name="scan_result_loading">Scan wird geladen...</string>
+    <string name="scan_result_loading">Wird geladen…</string>
     <string name="scan_result_not_found">Scan nicht gefunden</string>
 
     <string name="scan_result_title">Scan-Ergebnis</string>
     <string name="scan_result_content">Inhalt</string>
+
     <string name="save">Speichern</string>
     <string name="saved">Gespeichert</string>
     <string name="share">Teilen</string>
     <string name="browse">Öffnen</string>
-
+    <string name="delete">Löschen</string>
+    <string name="back">Zurück</string>
+    <string name="open_in_browser">Im Browser öffnen</string>
 
     <string name="history_title">Verlauf</string>
-    <string name="history_empty">Noch keine gespeicherten Scans</string>
+    <string name="history_empty">Keine gespeicherten Scans</string>
 
-    <string name="back">Zurück</string>
+    <string name="scan_save_failed">Scan konnte nicht gespeichert werden</string>
+    <string name="scan_delete_failed">Scan konnte nicht gelöscht werden</string>
+    <string name="scan_open_failed">Link konnte nicht geöffnet werden</string>
+    <string name="scan_share_failed">Scan konnte nicht geteilt werden</string>
 
-    <string name="open_in_browser">Im Browser öffnen</string>
-    <string name="delete">Löschen</string>
+    <string name="camera_permission_required">Kamerazugriff wird zum Scannen benötigt.</string>
+    <string name="grant_permission">Kamera erlauben</string>
+    <string name="open_settings">Einstellungen öffnen</string>
 
+    <string name="delete_scan_title">Scan löschen?</string>
+    <string name="delete_scan_message">Dieser Scan wird aus dem Verlauf entfernt.</string>
+    <string name="cancel">Abbrechen</string>
 </resources>
