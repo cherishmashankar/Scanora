@@ -17,4 +17,8 @@ interface ScanRepository {
         id: Long,
         isFavorite: Boolean
     )
+
+    suspend fun deleteScan(id: Long)
+
+    fun searchScans(query: String): Flow<List<Scan>>
 }

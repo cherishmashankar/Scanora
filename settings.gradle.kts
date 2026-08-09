@@ -31,3 +31,4 @@ include(":feature:scanner")
 
 include(":core:database")
 include(":core:data")
+include(":feature:history")

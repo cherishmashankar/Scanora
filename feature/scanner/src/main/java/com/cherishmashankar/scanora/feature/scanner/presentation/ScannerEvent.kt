@@ -8,6 +8,10 @@ internal sealed interface ScannerEvent {
         val scan: Scan
     ) : ScannerEvent
 
+    data object Detecting : ScannerEvent
+
+    data object SaveScan : ScannerEvent
+
     data object ScanAgain : ScannerEvent
 
     data object ToggleFlash : ScannerEvent
@@ -15,8 +19,4 @@ internal sealed interface ScannerEvent {
     data class CameraPermissionChanged(
         val granted: Boolean
     ) : ScannerEvent
-
-    data object Detecting : ScannerEvent
-
-    data object ScanResultConsumed : ScannerEvent
 }

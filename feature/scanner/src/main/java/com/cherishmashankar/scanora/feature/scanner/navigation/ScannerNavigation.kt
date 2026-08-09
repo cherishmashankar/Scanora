@@ -18,18 +18,16 @@ fun NavHostController.navigateToScanResult(
     navigate("scan_result/$scanId")
 }
 
-fun NavGraphBuilder.scannerScreen(
-    onScanResult: (Long) -> Unit
-) {
-    composable(SCANNER_ROUTE) {
-        ScannerRoute(
-            onScanResult = onScanResult
-        )
+fun NavGraphBuilder.scannerScreen() {
+    composable(
+        route = SCANNER_ROUTE
+    ) {
+        ScannerRoute()
     }
 }
 
 fun NavGraphBuilder.scanResultScreen(
-    onScanAgain: () -> Unit
+    onBack: () -> Unit
 ) {
     composable(
         route = SCAN_RESULT_ROUTE,
@@ -40,7 +38,7 @@ fun NavGraphBuilder.scanResultScreen(
         )
     ) {
         ScanResultRoute(
-            onScanAgain = onScanAgain
+            onBack = onBack
         )
     }
 }

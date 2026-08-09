@@ -42,4 +42,16 @@ class DefaultScanRepository @Inject constructor(
             isFavorite = isFavorite
         )
     }
+
+    override suspend fun deleteScan(id: Long) {
+        scanDao.deleteScan(id)
+    }
+
+    override fun searchScans(
+        query: String
+    ): Flow<List<Scan>> =
+        scanDao.searchScans(query)
+            .map { entities ->
+                entities.map { it.toModel() }
+            }
 }

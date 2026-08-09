@@ -4,18 +4,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cherishmashankar.scanora.core.data.repository.ScanRepository
-import com.cherishmashankar.scanora.core.model.Scan
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class ScanResultViewModel @Inject constructor(
-    scanRepository: ScanRepository,
+    private val scanRepository: ScanRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -24,7 +24,9 @@ internal class ScanResultViewModel @Inject constructor(
 
     val uiState: StateFlow<ScanResultUiState> =
         if (scanId == null) {
-            MutableStateFlow(ScanResultUiState.NotFound)
+            MutableStateFlow(
+                ScanResultUiState.NotFound
+            )
         } else {
             scanRepository.observeScan(scanId)
                 .map { scan ->
@@ -40,4 +42,18 @@ internal class ScanResultViewModel @Inject constructor(
                     initialValue = ScanResultUiState.Loading
                 )
         }
+
+    fun deleteScan(
+        onDeleted: () -> Unit
+    ) {
+        val id = scanId ?: return
+
+        viewModelScope.launch {
+            runCatching {
+                scanRepository.deleteScan(id)
+            }.onSuccess {
+                onDeleted()
+            }
+        }
+    }
 }

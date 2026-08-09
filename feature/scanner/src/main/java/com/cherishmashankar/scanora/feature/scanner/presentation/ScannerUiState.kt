@@ -8,5 +8,5 @@ internal data class ScannerUiState(
     val isFlashEnabled: Boolean = false,
     val scanResult: Scan? = null,
     val scannerStatus: ScannerStatus = ScannerStatus.INITIALIZING,
-    val savedScanId: Long? = null
+    val isSaved: Boolean = false
 )

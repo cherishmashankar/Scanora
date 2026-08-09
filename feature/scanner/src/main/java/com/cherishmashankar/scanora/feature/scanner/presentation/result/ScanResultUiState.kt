@@ -12,3 +12,4 @@ internal sealed interface ScanResultUiState {
 
     data object NotFound : ScanResultUiState
 }
+

@@ -23,4 +23,18 @@
     <string name="scan_result_loading">Loading scan...</string>
     <string name="scan_result_not_found">Scan not found</string>
 
+    <string name="scan_result_title">Scan result</string>
+    <string name="scan_result_content">Content</string>
+    <string name="save">Save</string>
+    <string name="saved">Saved</string>
+    <string name="share">Share</string>
+    <string name="browse">Browse</string>
+
+    <string name="history_title">History</string>
+    <string name="history_empty">No saved scans yet</string>
+
+    <string name="back">Back</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="delete">Delete</string>
+
 </resources>

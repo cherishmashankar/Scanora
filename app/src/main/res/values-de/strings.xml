@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Scanora</string>
+    <string name="nav_scanner">Scanner</string>
+    <string name="nav_history">Verlauf</string>
+
 
 </resources>

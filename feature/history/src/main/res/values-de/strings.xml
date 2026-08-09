@@ -1,0 +1,17 @@
+<resources>
+
+    <string name="app_name">Scanora</string>
+
+    <string name="nav_scanner">Scanner</string>
+    <string name="nav_history">Verlauf</string>
+
+    <string name="history_title">Verlauf</string>
+    <string name="history_empty">Noch keine gespeicherten Scans</string>
+    <string name="history_search_placeholder">Gespeicherte Scans suchen</string>
+
+    <string name="search">Suchen</string>
+    <string name="close_search">Suche schließen</string>
+
+
+
+</resources>

@@ -17,7 +17,8 @@ internal class ScannerViewModel @Inject constructor(
     private val scanRepository: ScanRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ScannerUiState())
+    private val _uiState =
+        MutableStateFlow(ScannerUiState())
 
     val uiState: StateFlow<ScannerUiState> =
         _uiState.asStateFlow()
@@ -26,7 +27,7 @@ internal class ScannerViewModel @Inject constructor(
         when (event) {
 
             is ScannerEvent.BarcodeDetected -> {
-                saveScan(event.scan)
+                onBarcodeDetected(event.scan)
             }
 
             ScannerEvent.Detecting -> {
@@ -39,31 +40,18 @@ internal class ScannerViewModel @Inject constructor(
                 }
             }
 
+            ScannerEvent.SaveScan -> {
+                saveCurrentScan()
+            }
+
             ScannerEvent.ScanAgain -> {
-                _uiState.update {
-                    it.copy(
-                        isScanning = true,
-                        scanResult = null,
-                        scannerStatus = ScannerStatus.READY
-                    )
-                }
+                resetScanner()
             }
 
             ScannerEvent.ToggleFlash -> {
                 _uiState.update {
                     it.copy(
                         isFlashEnabled = !it.isFlashEnabled
-                    )
-                }
-            }
-
-            ScannerEvent.ScanResultConsumed -> {
-                _uiState.update {
-                    it.copy(
-                        savedScanId = null,
-                        scanResult = null,
-                        isScanning = true,
-                        scannerStatus = ScannerStatus.READY
                     )
                 }
             }
@@ -83,32 +71,55 @@ internal class ScannerViewModel @Inject constructor(
         }
     }
 
-    private fun saveScan(scan: Scan) {
+    private fun onBarcodeDetected(scan: Scan) {
         if (!_uiState.value.isScanning) return
 
         _uiState.update {
-            it.copy(isScanning = false)
+            it.copy(
+                isScanning = false,
+                scanResult = scan,
+                scannerStatus = ScannerStatus.SUCCESS,
+                isSaved = false
+            )
         }
+    }
+
+    private fun saveCurrentScan() {
+        val currentState = _uiState.value
+
+        val scan = currentState.scanResult
+            ?: return
+
+        // Prevent multiple taps creating duplicate rows.
+        if (currentState.isSaved) return
 
         viewModelScope.launch {
             runCatching {
                 scanRepository.saveScan(scan)
             }.onSuccess { id ->
+
                 _uiState.update {
                     it.copy(
                         scanResult = scan.copy(id = id),
-                        savedScanId = id,
-                        scannerStatus = ScannerStatus.SUCCESS
+                        isSaved = true
                     )
                 }
+
             }.onFailure {
-                _uiState.update {
-                    it.copy(
-                        isScanning = true,
-                        scannerStatus = ScannerStatus.READY
-                    )
-                }
+                // We'll add explicit error UI later.
+                // Current result remains on screen.
             }
+        }
+    }
+
+    private fun resetScanner() {
+        _uiState.update {
+            it.copy(
+                isScanning = true,
+                scanResult = null,
+                scannerStatus = ScannerStatus.READY,
+                isSaved = false
+            )
         }
     }
 }

@@ -39,6 +39,7 @@ android {
 
 dependencies {
     implementation(project(":feature:scanner"))
+    implementation(project(":feature:history"))
     implementation(project(":core:designsystem"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
@@ -59,6 +60,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.androidx.compose.material.icons.extended)
 
 
 }

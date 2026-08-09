@@ -53,4 +53,23 @@ interface ScanDao {
         id: Long,
         isFavorite: Boolean
     )
+
+    @Query(
+        """
+    DELETE FROM scans
+    WHERE id = :id
+    """
+    )
+    suspend fun deleteScan(id: Long)
+
+    @Query(
+        """
+    SELECT *
+    FROM scans
+    WHERE value LIKE '%' || :query || '%'
+    ORDER BY timestamp DESC
+    """
+    )
+    fun searchScans(query: String): Flow<List<ScanEntity>>
+
 }
