@@ -11,6 +11,8 @@ android {
 
     defaultConfig {
         minSdk = 31
+        testInstrumentationRunner =
+            "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -24,8 +26,10 @@ dependencies {
     implementation(project(":core:database"))
     implementation(libs.kotlinx.coroutines.core)
 
-    testImplementation(libs.junit)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

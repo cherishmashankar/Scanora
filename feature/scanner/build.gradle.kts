@@ -15,6 +15,9 @@ android {
 
     defaultConfig {
         minSdk = 31
+
+        testInstrumentationRunner =
+            "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -40,7 +43,6 @@ dependencies {
 
 
     debugImplementation(libs.androidx.compose.ui.tooling)
-    testImplementation(libs.junit)
 
     //Navigation
     implementation(libs.androidx.navigation.compose)
@@ -64,5 +66,20 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     implementation(libs.zxing.core)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    androidTestImplementation(
+            platform(libs.androidx.compose.bom)
+            )
+
+    androidTestImplementation(
+        libs.androidx.compose.ui.test.junit4
+    )
+
+    debugImplementation(
+        libs.androidx.compose.ui.test.manifest
+    )
 
 }

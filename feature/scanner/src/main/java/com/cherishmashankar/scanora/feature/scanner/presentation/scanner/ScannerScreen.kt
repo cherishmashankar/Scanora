@@ -6,6 +6,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.ScanResultContent
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.isBrowsableUrl
@@ -30,7 +31,9 @@ internal fun ScannerScreen(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("scanner_screen")
     ) {
         when (uiState.cameraPermissionState) {
             CameraPermissionState.UNKNOWN -> {
