@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.cherishmashankar.scanora.feature.history.R
 import com.cherishmashankar.scanora.feature.history.presentation.components.HistoryEmptyContent
 import com.cherishmashankar.scanora.feature.history.presentation.components.HistoryHeader
 import com.cherishmashankar.scanora.feature.history.presentation.components.HistoryItemCard
@@ -36,7 +37,14 @@ internal fun HistoryScreen(
         )
 
         if (uiState.scans.isEmpty()) {
+            val isSearching = uiState.searchQuery.isNotBlank()
+
             HistoryEmptyContent(
+                messageRes = if (isSearching) {
+                    R.string.history_no_results
+                } else {
+                    R.string.history_empty
+                },
                 modifier = Modifier.fillMaxSize()
             )
 

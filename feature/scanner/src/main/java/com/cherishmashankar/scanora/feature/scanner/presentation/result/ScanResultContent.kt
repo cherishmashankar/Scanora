@@ -18,9 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.feature.scanner.R
+import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanCodePreview
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanContentCard
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanFormatBadge
-import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanResultActions
+import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanResultBottomActions
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanResultHeader
 
 @Composable
@@ -34,7 +35,6 @@ internal fun ScanResultContent(
     onDelete: () -> Unit,
     onShare: () -> Unit,
     onBrowse: () -> Unit,
-    bottomActionText: String,
     onBottomAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -43,8 +43,8 @@ internal fun ScanResultContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(24.dp)
-    ) {
+            .padding(horizontal = 16.dp)
+    ){
         ScanResultHeader(
             showSaveAction = showSaveAction,
             showDeleteAction = showDeleteAction,
@@ -58,19 +58,34 @@ internal fun ScanResultContent(
 
         ScanFormatBadge(format = scan.format)
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(20.dp))
 
-        ScanContentCard(value = scan.value)
+        ScanCodePreview(
+            value = scan.value,
+            format = scan.format
+        )
+        Spacer(Modifier.height(20.dp))
 
-        Spacer(Modifier.height(24.dp))
-
-        ScanResultActions(
+        ScanContentCard(
+            value = scan.value,
             canBrowse = canBrowse,
-            onBrowse = onBrowse,
-            bottomActionText = bottomActionText,
-            onBottomAction = onBottomAction,
+            onBrowse = onBrowse
+        )
+
+
+        Spacer(
             modifier = Modifier.weight(1f)
         )
+
+        if (showSaveAction) {
+            ScanResultBottomActions(
+                isSaved = isSaved,
+                onSave = onSave,
+                onScanAgain = onBottomAction
+            )
+        }
+
+
     }
 
     if (showDeleteDialog) {

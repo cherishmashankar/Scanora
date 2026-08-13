@@ -12,8 +12,8 @@ import com.cherishmashankar.scanora.feature.scanner.navigation.SCANNER_ROUTE
 enum class TopLevelDestination(
     val route: String,
     val icon: ImageVector,
-    @StringRes val labelRes: Int
-) {
+    @param:StringRes val labelRes: Int
+){
     SCANNER(
         route = SCANNER_ROUTE,
         icon = Icons.Default.QrCodeScanner,

@@ -11,11 +11,14 @@ internal data class ScannerUiState(
     val scannerStatus: ScannerStatus = ScannerStatus.INITIALIZING,
     val isSaved: Boolean = false,
     val isSaving: Boolean = false,
-    val saveError: ScannerError? = null
+    val saveError: ScannerError? = null,
+    val cameraError: ScannerError? = null,
+    val cameraRetryKey: Int = 0
 )
 
 internal enum class ScannerError {
-    SaveFailed
+    SaveFailed,
+    CameraUnavailable
 }
 
 internal enum class CameraPermissionState {

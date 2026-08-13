@@ -53,14 +53,14 @@ fun ScanoraBottomBar(
                         )
                     )
                 },
-//                label = {
-//                    Text(
-//                        text = stringResource(
-//                            destination.labelRes
-//                        ),
-//                        style = MaterialTheme.typography.labelMedium
-//                    )
-//                }
+                label = {
+                    Text(
+                        text = stringResource(
+                            destination.labelRes
+                        ),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
             )
         }
     }

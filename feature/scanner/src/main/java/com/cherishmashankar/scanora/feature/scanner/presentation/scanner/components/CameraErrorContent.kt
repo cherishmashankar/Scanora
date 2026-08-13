@@ -2,42 +2,41 @@ package com.cherishmashankar.scanora.feature.scanner.presentation.scanner.compon
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.feature.scanner.R
-import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.toStringRes
-import com.cherishmashankar.scanora.feature.scanner.presentation.toStringRes
 
 @Composable
-internal fun ScanResultContent(
-    scan: Scan,
-    onScanAgain: () -> Unit
+internal fun CameraErrorContent(
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = scan.value,
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        Text(
-            text = stringResource(scan.format.toStringRes()),
-            style = MaterialTheme.typography.bodyMedium
+            text = stringResource(R.string.camera_unavailable),
+            style = MaterialTheme.typography.titleMedium
         )
 
         Button(
-            onClick = onScanAgain
+            onClick = onRetry,
+            modifier = Modifier.padding(top = 16.dp)
         ) {
             Text(
-                text = stringResource(R.string.scan_again)
+                text = stringResource(R.string.retry)
             )
         }
     }

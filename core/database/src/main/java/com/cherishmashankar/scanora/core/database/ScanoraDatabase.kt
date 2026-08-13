@@ -10,7 +10,7 @@ import com.cherishmashankar.scanora.core.database.entity.ScanEntity
         ScanEntity::class
     ],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class ScanoraDatabase : RoomDatabase() {
 

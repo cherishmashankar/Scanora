@@ -27,7 +27,9 @@ internal fun CameraPreview(
     isFlashEnabled: Boolean,
     onCodeDetected: () -> Unit,
     onBarcodeDetected: (Scan) -> Unit,
-    modifier: Modifier = Modifier
+    onCameraError: () -> Unit,
+    modifier: Modifier = Modifier,
+    cameraRetryKey: Int,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -97,8 +99,12 @@ internal fun CameraPreview(
         }
     }
 
-    LaunchedEffect(lifecycleOwner) {
-        cameraController.bindToLifecycle(lifecycleOwner)
+    LaunchedEffect(lifecycleOwner, cameraRetryKey) {
+        runCatching {
+            cameraController.bindToLifecycle(lifecycleOwner)
+        }.onFailure {
+            onCameraError()
+        }
     }
 
     LaunchedEffect(isFlashEnabled) {

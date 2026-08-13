@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.cherishmashankar.scanora.feature.scanner.presentation.ScannerRoute
+import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.ScannerRoute
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.ScanResultRoute
 
 const val SCANNER_ROUTE = "scanner"

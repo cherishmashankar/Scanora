@@ -40,23 +40,23 @@ internal fun ScanResultHeader(
         )
 
         Row {
-            if (showSaveAction) {
-                IconButton(
-                    onClick = onSave,
-                    enabled = !isSaved
-                ) {
-                    Icon(
-                        imageVector = if (isSaved) {
-                            Icons.Default.Check
-                        } else {
-                            Icons.Default.Save
-                        },
-                        contentDescription = stringResource(
-                            if (isSaved) R.string.saved else R.string.save
-                        )
-                    )
-                }
-            }
+//            if (showSaveAction) {
+//                IconButton(
+//                    onClick = onSave,
+//                    enabled = !isSaved
+//                ) {
+//                    Icon(
+//                        imageVector = if (isSaved) {
+//                            Icons.Default.Check
+//                        } else {
+//                            Icons.Default.Save
+//                        },
+//                        contentDescription = stringResource(
+//                            if (isSaved) R.string.saved else R.string.save
+//                        )
+//                    )
+//                }
+//            }
 
             IconButton(
                 onClick = onShare

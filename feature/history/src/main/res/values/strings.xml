@@ -6,6 +6,7 @@
     <string name="history_title">History</string>
     <string name="history_empty">No saved scans yet</string>
     <string name="history_search_placeholder">Search saved scans</string>
+    <string name="history_no_results">No results</string>
 
     <string name="search">Search</string>
     <string name="close_search">Close search</string>

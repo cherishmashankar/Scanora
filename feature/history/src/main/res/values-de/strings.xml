@@ -8,6 +8,7 @@
     <string name="history_title">Verlauf</string>
     <string name="history_empty">Noch keine gespeicherten Scans</string>
     <string name="history_search_placeholder">Gespeicherte Scans suchen</string>
+    <string name="history_no_results">Keine Ergebnisse</string>
 
     <string name="search">Suchen</string>
     <string name="close_search">Suche schließen</string>

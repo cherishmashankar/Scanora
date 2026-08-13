@@ -1,10 +1,9 @@
-package com.cherishmashankar.scanora.feature.scanner.presentation
+package com.cherishmashankar.scanora.feature.scanner.presentation.scanner
 
 import androidx.annotation.StringRes
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.core.model.ScanFormat
 import com.cherishmashankar.scanora.feature.scanner.R
-import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.CameraPermissionState
 
 @StringRes
 internal fun ScanFormat.toStringRes(): Int =
@@ -32,4 +31,8 @@ internal sealed interface ScannerEvent {
     ) : ScannerEvent
 
     data object SaveErrorConsumed : ScannerEvent
+
+    data object CameraFailed : ScannerEvent
+
+    data object RetryCamera : ScannerEvent
 }

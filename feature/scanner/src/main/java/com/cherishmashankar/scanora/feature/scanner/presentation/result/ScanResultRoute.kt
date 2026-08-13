@@ -1,7 +1,6 @@
 package com.cherishmashankar.scanora.feature.scanner.presentation.result
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -9,19 +8,20 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cherishmashankar.scanora.feature.scanner.R
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanResultLoading
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanResultNotFound
 import kotlinx.coroutines.launch
+
+
 
 @Composable
 internal fun ScanResultRoute(
@@ -38,9 +38,6 @@ internal fun ScanResultRoute(
         SnackbarHostState()
     }
 
-    var showDeleteDialog by remember {
-        mutableStateOf(false)
-    }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -122,7 +119,7 @@ internal fun ScanResultRoute(
                         if (canBrowse) {
                             runCatching {
                                 val browseIntent =
-                                    Intent(Intent.ACTION_VIEW, Uri.parse(scan.value.toBrowsableUrl()))
+                                    Intent(Intent.ACTION_VIEW, scan.value.toBrowsableUrl().toUri())
                                 context.startActivity(browseIntent)
                             }.onFailure {
                                 coroutineScope.launch {
@@ -133,8 +130,6 @@ internal fun ScanResultRoute(
                             }
                         }
                     },
-                    bottomActionText =
-                        stringResource(R.string.back),
                     onBottomAction = onBack,
                     modifier = Modifier.padding(
                         innerPadding

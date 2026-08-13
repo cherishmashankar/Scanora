@@ -4,29 +4,26 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cherishmashankar.scanora.core.data.repository.ScanRepository
 import com.cherishmashankar.scanora.core.model.Scan
-import com.cherishmashankar.scanora.feature.scanner.presentation.ScannerEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 internal class ScannerViewModel @Inject constructor(
     private val scanRepository: ScanRepository
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow(ScannerUiState())
+    private val _uiState = MutableStateFlow(ScannerUiState())
 
     val uiState: StateFlow<ScannerUiState> =
         _uiState.asStateFlow()
 
     fun onEvent(event: ScannerEvent) {
         when (event) {
-
             is ScannerEvent.BarcodeDetected -> {
                 onBarcodeDetected(event.scan)
             }
@@ -56,10 +53,32 @@ internal class ScannerViewModel @Inject constructor(
                     )
                 }
             }
+
             ScannerEvent.SaveErrorConsumed -> {
                 _uiState.update {
                     it.copy(
                         saveError = null
+                    )
+                }
+            }
+
+            ScannerEvent.CameraFailed -> {
+                _uiState.update {
+                    it.copy(
+                        isScanning = false,
+                        scannerStatus = ScannerStatus.ERROR,
+                        cameraError = ScannerError.CameraUnavailable
+                    )
+                }
+            }
+
+            ScannerEvent.RetryCamera -> {
+                _uiState.update {
+                    it.copy(
+                        isScanning = true,
+                        scannerStatus = ScannerStatus.INITIALIZING,
+                        cameraError = null,
+                        cameraRetryKey = it.cameraRetryKey + 1
                     )
                 }
             }
@@ -96,25 +115,29 @@ internal class ScannerViewModel @Inject constructor(
 
     private fun saveCurrentScan() {
         val currentState = _uiState.value
+        val scan = currentState.scanResult ?: return
 
-        val scan = currentState.scanResult
-            ?: return
+        if (currentState.isSaved || currentState.isSaving) return
 
-        // Prevent multiple taps creating duplicate rows.
-        if (currentState.isSaved) return
+        _uiState.update {
+            it.copy(
+                isSaving = true,
+                saveError = null
+            )
+        }
 
         viewModelScope.launch {
             runCatching {
                 scanRepository.saveScan(scan)
             }.onSuccess { id ->
-
                 _uiState.update {
                     it.copy(
                         scanResult = scan.copy(id = id),
-                        isSaved = true
+                        isSaved = true,
+                        isSaving = false,
+                        saveError = null
                     )
                 }
-
             }.onFailure {
                 _uiState.update {
                     it.copy(
@@ -132,7 +155,10 @@ internal class ScannerViewModel @Inject constructor(
                 isScanning = true,
                 scanResult = null,
                 scannerStatus = ScannerStatus.READY,
-                isSaved = false
+                isSaved = false,
+                isSaving = false,
+                saveError = null,
+                cameraError = null
             )
         }
     }

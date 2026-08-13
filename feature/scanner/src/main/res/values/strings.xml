@@ -47,4 +47,7 @@
     <string name="delete_scan_message">This scan will be removed from history.</string>
     <string name="cancel">Cancel</string>
 
+    <string name="camera_unavailable">Camera unavailable</string>
+    <string name="retry">Retry</string>
+
 </resources>

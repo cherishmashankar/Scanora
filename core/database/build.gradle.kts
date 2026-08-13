@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
+
 }
 
 android {
@@ -19,6 +20,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
+
+
 
 dependencies {
     implementation(libs.androidx.room.runtime)

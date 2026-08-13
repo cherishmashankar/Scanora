@@ -1,5 +1,6 @@
 package com.cherishmashankar.scanora.feature.history.presentation.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,10 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.cherishmashankar.scanora.feature.history.R
 
 @Composable
 internal fun HistoryEmptyContent(
+    @StringRes messageRes: Int,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -35,7 +36,7 @@ internal fun HistoryEmptyContent(
             )
 
             Text(
-                text = stringResource(R.string.history_empty),
+                text = stringResource(messageRes),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

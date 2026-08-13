@@ -45,4 +45,7 @@
     <string name="delete_scan_title">Scan löschen?</string>
     <string name="delete_scan_message">Dieser Scan wird aus dem Verlauf entfernt.</string>
     <string name="cancel">Abbrechen</string>
+
+    <string name="camera_unavailable">Kamera nicht verfügbar</string>
+    <string name="retry">Erneut versuchen</string>
 </resources>

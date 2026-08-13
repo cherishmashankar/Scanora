@@ -1,14 +1,10 @@
 package com.cherishmashankar.scanora.feature.scanner.presentation.scanner.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
@@ -35,6 +31,8 @@ internal fun CameraContent(
     onBarcodeDetected: (Scan) -> Unit,
     onToggleFlash: () -> Unit,
     onCodeDetected: () -> Unit,
+    onCameraError: () -> Unit,
+    cameraRetryKey: Int,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -43,53 +41,46 @@ internal fun CameraContent(
         CameraPreview(
             isScanning = isScanning,
             isFlashEnabled = isFlashEnabled,
+            cameraRetryKey = cameraRetryKey,
             onCodeDetected = onCodeDetected,
             onBarcodeDetected = onBarcodeDetected,
+            onCameraError = onCameraError,
             modifier = Modifier.fillMaxSize()
         )
 
-        Column(
-            modifier = Modifier.align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            IconButton(
-                onClick = onToggleFlash,
-                modifier = Modifier.background(
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f),
+        CameraScanOverlay(
+            modifier = Modifier.fillMaxSize()
+        )
+
+        IconButton(
+            onClick = onToggleFlash,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = 100.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f),
                     shape = CircleShape
                 )
-            ) {
-                Icon(
-                    imageVector = if (isFlashEnabled) {
-                        Icons.Default.FlashOff
-                    } else {
-                        Icons.Default.FlashOn
-                    },
-                    contentDescription = stringResource(R.string.toggle_flash),
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
 
-            // Visual guide only.
-            Box(
-                modifier = Modifier
-                    .size(
-                        width = 320.dp,
-                        height = 220.dp
-                    )
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(24.dp)
-                    )
-            )
-
-            Text(
-                text = stringResource(scannerStatus.toStringRes()),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+        ) {
+            Icon(
+                imageVector = if (isFlashEnabled) {
+                    Icons.Default.FlashOff
+                } else {
+                    Icons.Default.FlashOn
+                },
+                contentDescription = stringResource(R.string.toggle_flash),
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
+
+        Text(
+            text = stringResource(scannerStatus.toStringRes()),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .offset(y = 140.dp)
+        )
     }
 }
