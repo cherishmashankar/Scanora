@@ -1,3 +1,4 @@
+
 import java.util.Properties
 
 plugins {
@@ -6,17 +7,28 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
-
 }
 
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
 val keystoreProperties = Properties().apply {
-    rootProject.file("keystore.properties")
-        .inputStream()
-        .use(::load)
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use(::load)
+    }
+}
+
+val hasReleaseSigning = listOf(
+    "storeFile",
+    "storePassword",
+    "keyAlias",
+    "keyPassword"
+).all { key ->
+    !keystoreProperties.getProperty(key).isNullOrBlank()
 }
 
 android {
     namespace = "com.cherishmashankar.scanora"
+
     compileSdk {
         version = release(37)
     }
@@ -25,23 +37,35 @@ android {
         applicationId = "com.cherishmashankar.scanora"
         minSdk = 31
         targetSdk = 37
+
         versionCode = 2
         versionName = "2.0.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner =
+            "androidx.test.runner.AndroidJUnitRunner"
     }
+
     signingConfigs {
-        create("release") {
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(
+                    keystoreProperties.getProperty("storeFile")
+                )
+                storePassword =
+                    keystoreProperties.getProperty("storePassword")
+                keyAlias =
+                    keystoreProperties.getProperty("keyAlias")
+                keyPassword =
+                    keystoreProperties.getProperty("keyPassword")
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
 
             optimization {
                 enable = false
@@ -53,10 +77,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
     }
 }
+
 
 dependencies {
     implementation(project(":feature:scanner"))
