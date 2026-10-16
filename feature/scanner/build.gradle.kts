@@ -63,6 +63,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
+    implementation(libs.kotlinx.coroutines.play.services)
+
     ksp(libs.hilt.compiler)
 
     implementation(libs.zxing.core)
@@ -81,5 +83,6 @@ dependencies {
     debugImplementation(
         libs.androidx.compose.ui.test.manifest
     )
+    testImplementation(libs.mockito.core)
 
 }

@@ -1,5 +1,6 @@
 package com.cherishmashankar.scanora.feature.scanner.presentation.scanner
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.core.model.ScanFormat
@@ -17,6 +18,12 @@ internal sealed interface ScannerEvent {
     data class BarcodeDetected(
         val scan: Scan
     ) : ScannerEvent
+
+    data class GalleryImageSelected(
+        val uri: Uri
+    ) : ScannerEvent
+
+    data object GalleryErrorConsumed : ScannerEvent
 
     data object Detecting : ScannerEvent
 

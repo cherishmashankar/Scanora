@@ -30,6 +30,8 @@ import com.cherishmashankar.scanora.feature.scanner.R
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.isBrowsableUrl
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.toBrowsableUrl
 import androidx.core.net.toUri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 
 @Composable
 internal fun ScannerRoute(
@@ -38,10 +40,22 @@ internal fun ScannerRoute(
     val context = LocalContext.current
     val activity = context as? Activity
     val lifecycleOwner = LocalLifecycleOwner.current
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let {
+            viewModel.onEvent(
+                ScannerEvent.GalleryImageSelected(it)
+            )
+        }
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val saveFailedMessage = stringResource(R.string.scan_save_failed)
+    val noBarcodeMessage = stringResource(R.string.gallery_no_barcode_found)
+    val galleryFailedMessage = stringResource(R.string.gallery_scan_failed)
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
@@ -57,6 +71,22 @@ internal fun ScannerRoute(
         viewModel.onEvent(
             ScannerEvent.CameraPermissionChanged(state)
         )
+    }
+
+    LaunchedEffect(uiState.galleryError) {
+        val message = when (uiState.galleryError) {
+            ScannerError.NoBarcodeFound -> noBarcodeMessage
+            ScannerError.GalleryScanFailed -> galleryFailedMessage
+            else -> null
+        }
+
+        if (message != null) {
+            snackbarHostState.showSnackbar(message)
+
+            viewModel.onEvent(
+                ScannerEvent.GalleryErrorConsumed
+            )
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -199,6 +229,13 @@ internal fun ScannerRoute(
             onRetryCamera = {
                 viewModel.onEvent(
                     ScannerEvent.RetryCamera
+                )
+            },
+            onImportImage = {
+                galleryLauncher.launch(
+                    PickVisualMediaRequest(
+                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                    )
                 )
             },
             modifier = Modifier.padding(innerPadding)

@@ -50,4 +50,8 @@
     <string name="camera_unavailable">Camera unavailable</string>
     <string name="retry">Retry</string>
 
+    <string name="gallery_no_barcode_found">No QR code or barcode found in this image.</string>
+    <string name="gallery_scan_failed">Could not scan the selected image. Please try another image.</string>
+    <string name="import_image">Import image</string>
+
 </resources>

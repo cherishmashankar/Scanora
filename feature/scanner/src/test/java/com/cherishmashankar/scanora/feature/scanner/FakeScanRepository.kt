@@ -1,4 +1,4 @@
-package com.cherishmashankar.scanora.feature.scanner.presentation
+package com.cherishmashankar.scanora.feature.scanner
 
 import com.cherishmashankar.scanora.core.data.repository.ScanRepository
 import com.cherishmashankar.scanora.core.model.Scan

@@ -84,4 +84,48 @@ internal class ScanResultUtilsTest {
             "  www.example.com  ".toBrowsableUrl()
         )
     }
+
+    // V2: Gallery image scanning edge cases
+
+    @Test
+    fun `gallery qr code containing https url is browsable`() {
+        val scannedValue = "https://scanora.app"
+
+        assertTrue(scannedValue.isBrowsableUrl())
+    }
+
+    @Test
+    fun `gallery barcode containing numeric value is not browsable`() {
+        val scannedValue = "5901234123457"
+
+        assertFalse(scannedValue.isBrowsableUrl())
+    }
+
+    @Test
+    fun `gallery qr code containing plain text is not browsable`() {
+        val scannedValue = "Scanora V2"
+
+        assertFalse(scannedValue.isBrowsableUrl())
+    }
+
+    @Test
+    fun `gallery qr code containing email address is not browsable`() {
+        val scannedValue = "hello@example.com"
+
+        assertFalse(scannedValue.isBrowsableUrl())
+    }
+
+    @Test
+    fun `gallery qr code containing wifi configuration is not browsable`() {
+        val scannedValue = "WIFI:T:WPA;S:MyNetwork;P:password123;;"
+
+        assertFalse(scannedValue.isBrowsableUrl())
+    }
+
+    @Test
+    fun `gallery qr code containing contact information is not browsable`() {
+        val scannedValue = "BEGIN:VCARD\nFN:John Doe\nEND:VCARD"
+
+        assertFalse(scannedValue.isBrowsableUrl())
+    }
 }

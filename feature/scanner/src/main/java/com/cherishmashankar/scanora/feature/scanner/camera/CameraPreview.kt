@@ -19,6 +19,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.core.model.ScanFormat
 import com.cherishmashankar.scanora.feature.scanner.mlkit.createBarcodeScanner
+import com.cherishmashankar.scanora.feature.scanner.mlkit.toScan
 import com.google.mlkit.vision.barcode.common.Barcode
 
 @Composable
@@ -75,18 +76,8 @@ internal fun CameraPreview(
 
             latestOnCodeDetected.value()
 
-            val value = barcode.rawValue
+            val scan = barcode.toScan()
                 ?: return@MlKitAnalyzer
-
-            val scan = Scan(
-                value = value,
-                format = if (barcode.format == Barcode.FORMAT_QR_CODE) {
-                    ScanFormat.QR_CODE
-                } else {
-                    ScanFormat.BARCODE
-                },
-                timestamp = System.currentTimeMillis()
-            )
 
             latestOnBarcodeDetected.value(scan)
         }

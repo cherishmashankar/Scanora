@@ -48,4 +48,8 @@
 
     <string name="camera_unavailable">Kamera nicht verfügbar</string>
     <string name="retry">Erneut versuchen</string>
+
+    <string name="gallery_no_barcode_found">In diesem Bild wurde kein QR-Code oder Barcode gefunden.</string>
+    <string name="gallery_scan_failed">Das ausgewählte Bild konnte nicht gescannt werden. Bitte versuche es mit einem anderen Bild.</string>
+    <string name="import_image">Bild importieren</string>
 </resources>

@@ -3,7 +3,7 @@ package com.cherishmashankar.scanora.feature.scanner.presentation.result
 import androidx.lifecycle.SavedStateHandle
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.core.model.ScanFormat
-import com.cherishmashankar.scanora.feature.scanner.presentation.FakeScanRepository
+import com.cherishmashankar.scanora.feature.scanner.FakeScanRepository
 import com.cherishmashankar.scanora.feature.scanner.presentation.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle

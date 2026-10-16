@@ -2,7 +2,7 @@ package com.cherishmashankar.scanora.feature.scanner.presentation.scanner
 
 import com.cherishmashankar.scanora.core.model.Scan
 import com.cherishmashankar.scanora.core.model.ScanFormat
-import com.cherishmashankar.scanora.feature.scanner.presentation.FakeScanRepository
+import com.cherishmashankar.scanora.feature.scanner.FakeScanRepository
 import com.cherishmashankar.scanora.feature.scanner.presentation.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -14,6 +14,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import com.cherishmashankar.scanora.feature.scanner.presentation.mlkit.FakeGalleryImageScanner
+import android.net.Uri
+import org.mockito.Mockito.mock
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ScannerViewModelTest {
@@ -22,12 +26,18 @@ internal class ScannerViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var repository: FakeScanRepository
+    private lateinit var galleryScanner: FakeGalleryImageScanner
     private lateinit var viewModel: ScannerViewModel
 
     @Before
     fun setup() {
         repository = FakeScanRepository()
-        viewModel = ScannerViewModel(repository)
+        galleryScanner = FakeGalleryImageScanner()
+
+        viewModel = ScannerViewModel(
+            scanRepository = repository,
+            galleryImageScanner = galleryScanner
+        )
     }
 
     @Test
@@ -404,6 +414,82 @@ internal class ScannerViewModelTest {
         assertEquals(2, repository.saveCallCount)
     }
 
+    @Test
+    fun `gallery image without barcode shows no barcode error`() = runTest {
+        galleryScanner.barcodes = emptyList()
+
+        viewModel.onEvent(
+            ScannerEvent.GalleryImageSelected(testUri())
+        )
+
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+
+        assertEquals(ScannerError.NoBarcodeFound, state.galleryError)
+        assertNull(state.scanResult)
+        assertTrue(state.isScanning)
+        assertFalse(state.isGalleryScanning)
+    }
+
+    @Test
+    fun `gallery scanner failure shows error`() = runTest {
+        galleryScanner.exception = IllegalStateException("Image processing failed")
+
+        viewModel.onEvent(
+            ScannerEvent.GalleryImageSelected(testUri())
+        )
+
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+
+        assertEquals(ScannerError.GalleryScanFailed, state.galleryError)
+        assertNull(state.scanResult)
+        assertTrue(state.isScanning)
+        assertFalse(state.isGalleryScanning)
+    }
+
+    @Test
+    fun `gallery error can be consumed`() = runTest {
+        galleryScanner.barcodes = emptyList()
+
+        viewModel.onEvent(
+            ScannerEvent.GalleryImageSelected(testUri())
+        )
+
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(
+            ScannerError.NoBarcodeFound,
+            viewModel.uiState.value.galleryError
+        )
+
+        viewModel.onEvent(ScannerEvent.GalleryErrorConsumed)
+
+        assertNull(viewModel.uiState.value.galleryError)
+    }
+
+    @Test
+    fun `gallery image is ignored after barcode already detected`() = runTest {
+        val scan = testScan()
+
+        viewModel.onEvent(ScannerEvent.BarcodeDetected(scan))
+
+        viewModel.onEvent(
+            ScannerEvent.GalleryImageSelected(testUri())
+        )
+
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+
+        assertEquals(scan, state.scanResult)
+        assertFalse(state.isScanning)
+        assertFalse(state.isGalleryScanning)
+        assertNull(state.galleryError)
+    }
+
 
     private fun testScan() =
         Scan(
@@ -411,4 +497,6 @@ internal class ScannerViewModelTest {
             format = ScanFormat.QR_CODE,
             timestamp = 1L
         )
+
+    private fun testUri(): Uri = mock(Uri::class.java)
 }
