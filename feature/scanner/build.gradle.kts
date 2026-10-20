@@ -34,12 +34,14 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:data"))
+    implementation(project(":core:domain"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.material3)
 
 
     debugImplementation(libs.androidx.compose.ui.tooling)
@@ -84,5 +86,9 @@ dependencies {
         libs.androidx.compose.ui.test.manifest
     )
     testImplementation(libs.mockito.core)
+
+    testImplementation(libs.junit4)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
 
 }

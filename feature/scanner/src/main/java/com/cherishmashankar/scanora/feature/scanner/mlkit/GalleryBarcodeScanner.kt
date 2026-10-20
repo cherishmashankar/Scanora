@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 
 
 internal class GalleryBarcodeScanner @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : GalleryImageScanner {
 
     override suspend fun scan(uri: Uri): List<Barcode> {

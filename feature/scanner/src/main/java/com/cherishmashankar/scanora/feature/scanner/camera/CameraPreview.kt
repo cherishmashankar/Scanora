@@ -17,10 +17,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.cherishmashankar.scanora.core.model.Scan
-import com.cherishmashankar.scanora.core.model.ScanFormat
 import com.cherishmashankar.scanora.feature.scanner.mlkit.createBarcodeScanner
 import com.cherishmashankar.scanora.feature.scanner.mlkit.toScan
-import com.google.mlkit.vision.barcode.common.Barcode
 
 @Composable
 internal fun CameraPreview(

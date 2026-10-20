@@ -1,7 +1,9 @@
 package com.cherishmashankar.scanora.feature.scanner.presentation.result
 
 import androidx.lifecycle.SavedStateHandle
+import com.cherishmashankar.scanora.core.domain.ScanContentDetector
 import com.cherishmashankar.scanora.core.model.Scan
+import com.cherishmashankar.scanora.core.model.ScanContent
 import com.cherishmashankar.scanora.core.model.ScanFormat
 import com.cherishmashankar.scanora.feature.scanner.FakeScanRepository
 import com.cherishmashankar.scanora.feature.scanner.presentation.MainDispatcherRule
@@ -16,11 +18,16 @@ import org.junit.Rule
 import org.junit.Test
 import kotlinx.coroutines.launch
 
+
+
+
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class ScanResultViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+
+    private val contentDetector = ScanContentDetector()
 
     @Test
     fun `valid scan id loads scan successfully`() = runTest {
@@ -41,7 +48,15 @@ internal class ScanResultViewModelTest {
         advanceUntilIdle()
 
         assertEquals(
-            ScanResultUiState.Success(scan),
+            ScanResultUiState.Success(
+                scan = scan,
+                content = ScanContent.Url("https://example.com"),
+                actions = listOf(
+                    SmartAction.OPEN_URL,
+                    SmartAction.COPY,
+                    SmartAction.SHARE
+                )
+            ),
             viewModel.uiState.value
         )
 
@@ -52,7 +67,8 @@ internal class ScanResultViewModelTest {
     fun `missing scan id returns not found`() {
         val viewModel = ScanResultViewModel(
             scanRepository = FakeScanRepository(),
-            savedStateHandle = SavedStateHandle()
+            savedStateHandle = SavedStateHandle(),
+            contentDetector = contentDetector
         )
 
         assertEquals(
@@ -78,6 +94,39 @@ internal class ScanResultViewModelTest {
 
         assertEquals(
             ScanResultUiState.NotFound,
+            viewModel.uiState.value
+        )
+
+        job.cancel()
+    }
+
+    @Test
+    fun `plain text scan provides copy and share actions`() = runTest {
+        val repository = FakeScanRepository()
+        val scan = testScan().copy(value = "Hello Scanora")
+
+        repository.scanFlow.value = scan
+
+        val viewModel = createViewModel(
+            repository = repository,
+            scanId = 42L
+        )
+
+        val job = backgroundScope.launch {
+            viewModel.uiState.collect {}
+        }
+
+        advanceUntilIdle()
+
+        assertEquals(
+            ScanResultUiState.Success(
+                scan = scan,
+                content = ScanContent.Text("Hello Scanora"),
+                actions = listOf(
+                    SmartAction.COPY,
+                    SmartAction.SHARE
+                )
+            ),
             viewModel.uiState.value
         )
 
@@ -120,7 +169,6 @@ internal class ScanResultViewModelTest {
         )
 
         viewModel.deleteScan {}
-
         advanceUntilIdle()
 
         assertFalse(viewModel.isDeleting.value)
@@ -184,10 +232,9 @@ internal class ScanResultViewModelTest {
     @Test
     fun `delete can succeed after previous failure`() = runTest {
         val repository = FakeScanRepository().apply {
-            deleteResult =
-                Result.failure(
-                    IllegalStateException("failed")
-                )
+            deleteResult = Result.failure(
+                IllegalStateException("failed")
+            )
         }
 
         val viewModel = createViewModel(
@@ -208,8 +255,7 @@ internal class ScanResultViewModelTest {
 
         viewModel.consumeDeleteError()
 
-        repository.deleteResult =
-            Result.success(Unit)
+        repository.deleteResult = Result.success(Unit)
 
         viewModel.deleteScan {
             deleted = true
@@ -229,7 +275,8 @@ internal class ScanResultViewModelTest {
         scanRepository = repository,
         savedStateHandle = SavedStateHandle(
             mapOf("scanId" to scanId)
-        )
+        ),
+        contentDetector = contentDetector
     )
 
     private fun testScan() = Scan(

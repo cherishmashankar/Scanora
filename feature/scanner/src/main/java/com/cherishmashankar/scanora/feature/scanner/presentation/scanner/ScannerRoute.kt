@@ -30,11 +30,14 @@ import com.cherishmashankar.scanora.feature.scanner.R
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.isBrowsableUrl
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.toBrowsableUrl
 import androidx.core.net.toUri
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+
 
 @Composable
 internal fun ScannerRoute(
+    onResultVisibilityChanged: (Boolean) -> Unit,
     viewModel: ScannerViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -42,6 +45,19 @@ internal fun ScannerRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
+    val saveFailedMessage =
+        stringResource(R.string.scan_save_failed)
+    val noBarcodeMessage =
+        stringResource(R.string.gallery_no_barcode_found)
+    val galleryFailedMessage =
+        stringResource(R.string.gallery_scan_failed)
+    val smartActionFailedMessage =
+        stringResource(R.string.smart_action_failed)
+
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
@@ -52,25 +68,32 @@ internal fun ScannerRoute(
         }
     }
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    val saveFailedMessage = stringResource(R.string.scan_save_failed)
-    val noBarcodeMessage = stringResource(R.string.gallery_no_barcode_found)
-    val galleryFailedMessage = stringResource(R.string.gallery_scan_failed)
-
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
         val state = when {
             granted -> CameraPermissionState.GRANTED
+
             activity?.shouldShowRequestPermissionRationale(
                 Manifest.permission.CAMERA
             ) == true -> CameraPermissionState.DENIED
+
             else -> CameraPermissionState.PERMANENTLY_DENIED
         }
 
         viewModel.onEvent(
             ScannerEvent.CameraPermissionChanged(state)
         )
+    }
+
+    LaunchedEffect(uiState.scanResult != null) {
+        onResultVisibilityChanged(uiState.scanResult != null)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            onResultVisibilityChanged(false)
+        }
     }
 
     LaunchedEffect(uiState.galleryError) {
@@ -149,66 +172,99 @@ internal fun ScannerRoute(
 
     Scaffold(
         snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { innerPadding ->
         ScannerScreen(
             uiState = uiState,
+
             onCodeDetected = {
                 viewModel.onEvent(
                     ScannerEvent.Detecting
                 )
             },
+
             onBarcodeDetected = { scan ->
                 viewModel.onEvent(
                     ScannerEvent.BarcodeDetected(scan)
                 )
             },
+
             onToggleFlash = {
                 viewModel.onEvent(
                     ScannerEvent.ToggleFlash
                 )
             },
+
             onSave = {
                 viewModel.onEvent(
                     ScannerEvent.SaveScan
                 )
             },
+
             onScanAgain = {
                 viewModel.onEvent(
                     ScannerEvent.ScanAgain
                 )
             },
-            onShare = { value ->
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, value)
-                }
 
-                context.startActivity(
-                    Intent.createChooser(
-                        shareIntent,
-                        null
+            onSmartActionError = {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = smartActionFailedMessage
                     )
-                )
+                }
             },
-            onBrowse = { value ->
-                if (value.isBrowsableUrl()) {
+
+            onShare = { value ->
+                runCatching {
+                    val shareIntent = Intent(
+                        Intent.ACTION_SEND
+                    ).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, value)
+                    }
+
                     context.startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            value.toBrowsableUrl().toUri()
+                        Intent.createChooser(
+                            shareIntent,
+                            null
                         )
                     )
+                }.onFailure {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = smartActionFailedMessage
+                        )
+                    }
                 }
             },
+
+//            onBrowse = { value ->
+//                if (value.isBrowsableUrl()) {
+//                    runCatching {
+//                        context.startActivity(
+//                            Intent(
+//                                Intent.ACTION_VIEW,
+//                                value.toBrowsableUrl().toUri()
+//                            )
+//                        )
+//                    }.onFailure {
+//                        coroutineScope.launch {
+//                            snackbarHostState.showSnackbar(
+//                                message = smartActionFailedMessage
+//                            )
+//                        }
+//                    }
+//                }
+//            },
+
             onRequestPermission = {
                 permissionLauncher.launch(
                     Manifest.permission.CAMERA
                 )
             },
+
             onOpenSettings = {
                 context.startActivity(
                     Intent(
@@ -221,23 +277,28 @@ internal fun ScannerRoute(
                     )
                 )
             },
+
             onCameraError = {
                 viewModel.onEvent(
                     ScannerEvent.CameraFailed
                 )
             },
+
             onRetryCamera = {
                 viewModel.onEvent(
                     ScannerEvent.RetryCamera
                 )
             },
+
             onImportImage = {
                 galleryLauncher.launch(
                     PickVisualMediaRequest(
-                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                        ActivityResultContracts
+                            .PickVisualMedia.ImageOnly
                     )
                 )
             },
+
             modifier = Modifier.padding(innerPadding)
         )
     }

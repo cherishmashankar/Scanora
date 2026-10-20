@@ -33,25 +33,54 @@ import androidx.compose.ui.graphics.Color
 //)
 
 private val ScanoraDarkColors = darkColorScheme(
+    // Primary actions
     primary = Color(0xFFF5F5F5),
-    onPrimary = Color(0xFF111111),
-    primaryContainer = Color(0xFF2A2A2A),
-    onPrimaryContainer = Color(0xFFF5F5F5),
+    onPrimary = Color(0xFF0A0A0A),
+    primaryContainer = Color(0xFF292929),
+    onPrimaryContainer = Color(0xFFFFFFFF),
 
-    background = Color(0xFF0D0D0D),
-    onBackground = Color(0xFFF2F2F2),
+    // Secondary accents
+    secondary = Color(0xFFD0D0D0),
+    onSecondary = Color(0xFF111111),
+    secondaryContainer = Color(0xFF252525),
+    onSecondaryContainer = Color(0xFFECECEC),
 
-    surface = Color(0xFF0D0D0D),
-    onSurface = Color(0xFFF2F2F2),
+    // Background
+    background = Color(0xFF000000),
+    onBackground = Color(0xFFF5F5F5),
 
-    surfaceVariant = Color(0xFF1B1B1B),
-    onSurfaceVariant = Color(0xFFB8B8B8),
+    // Base surfaces
+    surface = Color(0xFF000000),
+    onSurface = Color(0xFFF5F5F5),
+    surfaceVariant = Color(0xFF1C1C1C),
+    onSurfaceVariant = Color(0xFFB5B5B5),
 
-    outline = Color(0xFF5A5A5A),
+    // Surface elevation hierarchy
+    surfaceDim = Color(0xFF000000),
+    surfaceBright = Color(0xFF303030),
+    surfaceContainerLowest = Color(0xFF080808),
+    surfaceContainerLow = Color(0xFF111111),
+    surfaceContainer = Color(0xFF191919),
+    surfaceContainerHigh = Color(0xFF222222),
+    surfaceContainerHighest = Color(0xFF2B2B2B),
+
+    // Borders and dividers
+    outline = Color(0xFF666666),
     outlineVariant = Color(0xFF303030),
 
-    error = Color(0xFFFF6B6B),
-    onError = Color.Black
+    // Errors
+    error = Color(0xFFFF7777),
+    onError = Color(0xFF330000),
+    errorContainer = Color(0xFF6B2020),
+    onErrorContainer = Color(0xFFFFDADA),
+
+    // Inverse colors
+    inverseSurface = Color(0xFFF2F2F2),
+    inverseOnSurface = Color(0xFF161616),
+    inversePrimary = Color(0xFF333333),
+
+    // Scrim
+    scrim = Color.Black
 )
 
 

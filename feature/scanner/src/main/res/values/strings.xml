@@ -54,4 +54,45 @@
     <string name="gallery_scan_failed">Could not scan the selected image. Please try another image.</string>
     <string name="import_image">Import image</string>
 
+    <string name="smart_action_open_url">Open link</string>
+    <string name="smart_action_wifi_settings">Open Wi-Fi settings</string>
+    <string name="smart_action_send_email">Send email</string>
+    <string name="smart_action_dial_phone">Dial number</string>
+    <string name="smart_action_add_contact">Add contact</string>
+    <string name="smart_action_copy">Copy</string>
+    <string name="smart_action_share">Share</string>
+    <string name="smart_action_failed">Unable to perform this action</string>
+
+    <string name="result_website_detected">Website detected</string>
+    <string name="result_phone_detected">Phone number detected</string>
+    <string name="result_wifi_detected">Wi-Fi network detected</string>
+    <string name="result_email_detected">Email detected</string>
+    <string name="result_contact_detected">Contact detected</string>
+    <string name="result_text_detected">Text detected</string>
+
+    <string name="result_type_url">QR Code · URL</string>
+    <string name="result_type_phone">QR Code · Phone</string>
+    <string name="result_type_wifi">QR Code · Wi-Fi</string>
+    <string name="result_type_email">QR Code · Email</string>
+    <string name="result_type_contact">QR Code · Contact</string>
+    <string name="result_type_text">QR Code · Text</string>
+
+    <string name="result_scanned_content">SCANNED CONTENT</string>
+    <string name="result_email_address">Email address</string>
+    <string name="result_subject">Subject</string>
+    <string name="result_message">Message</string>
+    <string name="result_name">Name</string>
+    <string name="result_phone">Phone number</string>
+    <string name="result_network">Network</string>
+    <string name="result_security">Security</string>
+    <string name="result_password">Password</string>
+    <string name="result_show_password">Show password</string>
+    <string name="result_hide_password">Hide password</string>
+
+    <string name="result_action_open_website">Open website</string>
+    <string name="result_action_wifi">Open Wi-Fi settings</string>
+    <string name="result_action_send_email">Send email</string>
+    <string name="result_action_dial">Dial number</string>
+    <string name="result_action_add_contact">Add contact</string>
+
 </resources>

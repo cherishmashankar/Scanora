@@ -52,4 +52,45 @@
     <string name="gallery_no_barcode_found">In diesem Bild wurde kein QR-Code oder Barcode gefunden.</string>
     <string name="gallery_scan_failed">Das ausgewählte Bild konnte nicht gescannt werden. Bitte versuche es mit einem anderen Bild.</string>
     <string name="import_image">Bild importieren</string>
+
+    <string name="smart_action_open_url">Link öffnen</string>
+    <string name="smart_action_wifi_settings">WLAN-Einstellungen öffnen</string>
+    <string name="smart_action_send_email">E-Mail senden</string>
+    <string name="smart_action_dial_phone">Nummer wählen</string>
+    <string name="smart_action_add_contact">Kontakt hinzufügen</string>
+    <string name="smart_action_copy">Kopieren</string>
+    <string name="smart_action_share">Teilen</string>
+    <string name="smart_action_failed">Aktion konnte nicht ausgeführt werden</string>
+
+    <string name="result_website_detected">Webseite erkannt</string>
+    <string name="result_phone_detected">Telefonnummer erkannt</string>
+    <string name="result_wifi_detected">WLAN-Netzwerk erkannt</string>
+    <string name="result_email_detected">E-Mail erkannt</string>
+    <string name="result_contact_detected">Kontakt erkannt</string>
+    <string name="result_text_detected">Text erkannt</string>
+
+    <string name="result_type_url">QR-Code · URL</string>
+    <string name="result_type_phone">QR-Code · Telefon</string>
+    <string name="result_type_wifi">QR-Code · WLAN</string>
+    <string name="result_type_email">QR-Code · E-Mail</string>
+    <string name="result_type_contact">QR-Code · Kontakt</string>
+    <string name="result_type_text">QR-Code · Text</string>
+
+    <string name="result_scanned_content">GESCANNTER INHALT</string>
+    <string name="result_email_address">E-Mail-Adresse</string>
+    <string name="result_subject">Betreff</string>
+    <string name="result_message">Nachricht</string>
+    <string name="result_name">Name</string>
+    <string name="result_phone">Telefonnummer</string>
+    <string name="result_network">Netzwerk</string>
+    <string name="result_security">Sicherheit</string>
+    <string name="result_password">Passwort</string>
+    <string name="result_show_password">Passwort anzeigen</string>
+    <string name="result_hide_password">Passwort verbergen</string>
+
+    <string name="result_action_open_website">Webseite öffnen</string>
+    <string name="result_action_wifi">WLAN-Einstellungen öffnen</string>
+    <string name="result_action_send_email">E-Mail senden</string>
+    <string name="result_action_dial">Nummer wählen</string>
+    <string name="result_action_add_contact">Kontakt hinzufügen</string>
 </resources>

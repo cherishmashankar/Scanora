@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -22,11 +25,14 @@ fun ScanoraNavHost() {
     val backStackEntry by
     navController.currentBackStackEntryAsState()
 
-    val currentRoute =
-        backStackEntry?.destination?.route
+    val currentRoute = backStackEntry?.destination?.route
+
+    var isScannerResultVisible by remember {
+        mutableStateOf(false)
+    }
 
     val showBottomBar =
-        currentRoute == SCANNER_ROUTE ||
+        (currentRoute == SCANNER_ROUTE && !isScannerResultVisible) ||
                 currentRoute == HISTORY_ROUTE
 
     Scaffold(
@@ -39,7 +45,6 @@ fun ScanoraNavHost() {
                             popUpTo(SCANNER_ROUTE) {
                                 saveState = true
                             }
-
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -54,7 +59,11 @@ fun ScanoraNavHost() {
             startDestination = SCANNER_ROUTE,
             modifier = Modifier.padding(innerPadding)
         ) {
-            scannerScreen()
+            scannerScreen(
+                onResultVisibilityChanged = { visible ->
+                    isScannerResultVisible = visible
+                }
+            )
 
             historyScreen(
                 onScanClick = { scanId ->

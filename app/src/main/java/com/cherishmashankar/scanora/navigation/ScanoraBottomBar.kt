@@ -16,7 +16,8 @@ fun ScanoraBottomBar(
     onDestinationClick: (TopLevelDestination) -> Unit
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         tonalElevation = 6.dp
     ) {
         TopLevelDestination.entries.forEach { destination ->
@@ -58,7 +59,7 @@ fun ScanoraBottomBar(
                         text = stringResource(
                             destination.labelRes
                         ),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
             )

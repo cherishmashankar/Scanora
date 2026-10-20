@@ -20,6 +20,14 @@ import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.compone
 import com.cherishmashankar.scanora.feature.scanner.presentation.scanner.components.PermissionContent
 import com.cherishmashankar.scanora.feature.scanner.R
 import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.remember
+import com.cherishmashankar.scanora.core.domain.ScanContentDetector
+import com.cherishmashankar.scanora.core.model.ScanContent
+import com.cherishmashankar.scanora.feature.scanner.presentation.result.availableActions
+
+import androidx.compose.ui.platform.LocalContext
+import com.cherishmashankar.scanora.feature.scanner.presentation.result.SmartActionHandler
+import androidx.activity.compose.BackHandler
 
 
 @Composable
@@ -30,8 +38,8 @@ internal fun ScannerScreen(
     onToggleFlash: () -> Unit,
     onSave: () -> Unit,
     onShare: (String) -> Unit,
-    onBrowse: (String) -> Unit,
     onScanAgain: () -> Unit,
+    onSmartActionError: () -> Unit,
     onRequestPermission: () -> Unit,
     onOpenSettings: () -> Unit,
     onCameraError: () -> Unit,
@@ -39,6 +47,15 @@ internal fun ScannerScreen(
     onImportImage: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
+    val smartActionHandler = remember(context) {
+        SmartActionHandler(context)
+    }
+    BackHandler(enabled = uiState.scanResult != null) {
+        onScanAgain()
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -47,22 +64,44 @@ internal fun ScannerScreen(
         val scan = uiState.scanResult
 
         if (scan != null) {
-            // Shared result screen for camera and gallery scans
+            val content = remember(scan.value) {
+                ScanContentDetector().detect(scan.value)
+            }
+
+            val actions = remember(content) {
+                content.availableActions()
+            }
+
             ScanResultContent(
                 scan = scan,
+                content = content,
+                actions = actions,
+
+                onSmartAction = { action ->
+                    smartActionHandler.execute(
+                        action = action,
+                        content = content,
+                        rawValue = scan.value
+                    ).onFailure {
+                        onSmartActionError()
+                    }
+                },
+
                 showSaveAction = true,
                 showDeleteAction = false,
                 isSaved = uiState.isSaved,
-                canBrowse = scan.value.isBrowsableUrl(),
                 onSave = onSave,
                 onDelete = {},
-                onShare = { onShare(scan.value) },
-                onBrowse = { onBrowse(scan.value) },
+                onShare = {
+                    onShare(scan.value)
+                },
+//                onBrowse = {
+//                    onBrowse(scan.value)
+//                },
                 onBottomAction = onScanAgain,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
-            // Camera UI depends on camera permission
             when (uiState.cameraPermissionState) {
 
                 CameraPermissionState.UNKNOWN -> {
@@ -91,7 +130,8 @@ internal fun ScannerScreen(
                         )
                     } else {
                         CameraContent(
-                            isScanning = uiState.isScanning && !uiState.isGalleryScanning,
+                            isScanning = uiState.isScanning &&
+                                    !uiState.isGalleryScanning,
                             isFlashEnabled = uiState.isFlashEnabled,
                             scannerStatus = uiState.scannerStatus,
                             onCodeDetected = onCodeDetected,
@@ -104,7 +144,6 @@ internal fun ScannerScreen(
                     }
                 }
             }
-
 
             Button(
                 onClick = onImportImage,

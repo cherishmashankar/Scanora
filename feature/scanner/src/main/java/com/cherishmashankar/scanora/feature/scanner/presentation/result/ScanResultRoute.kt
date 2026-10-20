@@ -13,15 +13,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.cherishmashankar.scanora.core.model.ScanContent
 import com.cherishmashankar.scanora.feature.scanner.R
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanResultLoading
 import com.cherishmashankar.scanora.feature.scanner.presentation.result.components.ScanResultNotFound
 import kotlinx.coroutines.launch
-
-
 
 @Composable
 internal fun ScanResultRoute(
@@ -29,111 +27,120 @@ internal fun ScanResultRoute(
     viewModel: ScanResultViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val smartActionHandler = remember(context) {
+        SmartActionHandler(context)
+    }
+    val smartActionFailedMessage =
+        stringResource(R.string.smart_action_failed)
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isDeleting by viewModel.isDeleting.collectAsStateWithLifecycle()
     val deleteError by viewModel.deleteError.collectAsStateWithLifecycle()
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
-
+    val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    val deleteFailedMessage =
-        stringResource(R.string.scan_delete_failed)
-
-    val openFailedMessage =
-        stringResource(R.string.scan_open_failed)
-
-    val shareFailedMessage =
-        stringResource(R.string.scan_share_failed)
+    val deleteFailedMessage = stringResource(R.string.scan_delete_failed)
+//    val openFailedMessage = stringResource(R.string.scan_open_failed)
+    val shareFailedMessage = stringResource(R.string.scan_share_failed)
 
     LaunchedEffect(deleteError) {
         if (deleteError) {
-            snackbarHostState.showSnackbar(
-                message = deleteFailedMessage
-            )
-
+            snackbarHostState.showSnackbar(deleteFailedMessage)
             viewModel.consumeDeleteError()
         }
     }
 
+
+
+
     Scaffold(
         snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState
-            )
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { innerPadding ->
 
         when (val state = uiState) {
 
             ScanResultUiState.Loading -> {
-                ScanResultLoading(modifier = Modifier.padding(innerPadding))
+                ScanResultLoading(
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
 
             is ScanResultUiState.Success -> {
                 val scan = state.scan
+                val content = state.content
 
-                val canBrowse =
-                    scan.value.isBrowsableUrl()
+//                val canBrowse = content is ScanContent.Url
+//
+//                fun showOpenError() {
+//                    coroutineScope.launch {
+//                        snackbarHostState.showSnackbar(openFailedMessage)
+//                    }
+//                }
+
+                fun showShareError() {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(shareFailedMessage)
+                    }
+                }
 
                 ScanResultContent(
                     scan = scan,
+                    content = content,
+                    actions = state.actions,
+                    onSmartAction = { action ->
+                        smartActionHandler.execute(
+                            action = action,
+                            content = content,
+                            rawValue = scan.value
+                        ).onFailure {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = smartActionFailedMessage
+                                )
+                            }
+                        }
+                    },
+
                     showSaveAction = false,
                     showDeleteAction = true,
                     isSaved = true,
-                    canBrowse = canBrowse,
                     onSave = {},
                     onDelete = {
                         if (!isDeleting) {
-                            viewModel.deleteScan(
-                                onDeleted = onBack
-                            )
+                            viewModel.deleteScan(onDeleted = onBack)
                         }
                     },
                     onShare = {
                         runCatching {
-                            val shareIntent =
-                                Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, scan.value)
-                                }
+                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, scan.value)
+                            }
                             context.startActivity(
-                                Intent.createChooser(
-                                    shareIntent,
-                                    null
-                                )
+                                Intent.createChooser(shareIntent, null)
                             )
                         }.onFailure {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = shareFailedMessage
-                                )
-                            }
+                            showShareError()
                         }
                     },
-                    onBrowse = {
-                        if (canBrowse) {
-                            runCatching {
-                                val browseIntent =
-                                    Intent(Intent.ACTION_VIEW, scan.value.toBrowsableUrl().toUri())
-                                context.startActivity(browseIntent)
-                            }.onFailure {
-                                coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        message = openFailedMessage
-                                    )
-                                }
-                            }
-                        }
-                    },
+//                    onBrowse = {
+//                        if (content is ScanContent.Url) {
+//                            runCatching {
+//                                context.startActivity(
+//                                    Intent(
+//                                        Intent.ACTION_VIEW,
+//                                        content.url.toUri()
+//                                    )
+//                                )
+//                            }.onFailure {
+//                                showOpenError()
+//                            }
+//                        }
+//                    },
                     onBottomAction = onBack,
-                    modifier = Modifier.padding(
-                        innerPadding
-                    )
+                    modifier = Modifier.padding(innerPadding)
                 )
             }
 

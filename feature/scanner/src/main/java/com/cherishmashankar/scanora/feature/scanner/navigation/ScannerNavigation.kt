@@ -18,11 +18,15 @@ fun NavHostController.navigateToScanResult(
     navigate("scan_result/$scanId")
 }
 
-fun NavGraphBuilder.scannerScreen() {
+fun NavGraphBuilder.scannerScreen(
+    onResultVisibilityChanged: (Boolean) -> Unit
+) {
     composable(
         route = SCANNER_ROUTE
     ) {
-        ScannerRoute()
+        ScannerRoute(
+            onResultVisibilityChanged = onResultVisibilityChanged
+        )
     }
 }
 
